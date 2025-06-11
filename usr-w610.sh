@@ -5,11 +5,10 @@
 
 # This script is the linux equivalent to USR-VCOM's Search USR232-WIFI-X function
 # as well a virtual port setup tool
+# support for multiple devices on network
 
 # Needs 'arping', 'arp-scan', and 'nmap' utilities
 # "sudo apt install iputils-arping arp-scan nmap" on ubuntu
-
-# support for multiple devices on network
 
 # windows software available at www.pusr.com
 # usr-vcom = virtual serial port software
@@ -24,7 +23,7 @@
 # !! This script will output the psuedo mac as the devices label as well as the virtual port suffix to match
 # !! the labeling on the device.
 
-# usr-w610 device setup step
+# usr-w610 device setup steps
 #  --Load default settings
 #  --Change from AP to STA, and connect to my home network
 #  --Reboot usr-w610
@@ -63,7 +62,7 @@ do
   separator=":"
   bssidlow=$(echo "$bssidstr" | sed "s/../&${separator}/g" | sed 's/'"$separator"'$//')
   
-  bssid=$(echo "${bssidlow^^}")
+  bssid="${bssidlow^^}"
   macid="${macsuffix^^}"
   
   # find port on a given ip that has the "ospf-lite" service and is open
