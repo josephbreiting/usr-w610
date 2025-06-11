@@ -13,3 +13,10 @@ Script will find any usr-w610s on the network and list them with the socat comma
     socat pty,link=/home/user/vcom6A84,waitslave,group-late=dialout,mode=660 tcp:192.168.1.109:8899 &
     D8:B0:4C:C5:93:78	192.168.1.198:8899
     socat pty,link=/home/user/vcom9378,waitslave,group-late=dialout,mode=660 tcp:192.168.1.198:8899 &
+
+## Testing
+
+Tested on two physical usr-w610 devices using Ubuntu 24.04.2 LTS.
+Requires arping, arp-scan, and nmap.
+
+    sudo apt install iputils-arping arp-scan nmap
