@@ -5,10 +5,13 @@
 
 # This script is the linux equivalent to USR-VCOM's Search USR232-WIFI-X function
 # as well a virtual port setup tool
-# support for multiple devices on network
 
 # Needs 'arping', 'arp-scan', and 'nmap' utilities
 # "sudo apt install iputils-arping arp-scan nmap" on ubuntu
+
+# support for multiple devices on network
+# todo: copy minus 1 nomenclature for displaying mac to user
+# todo: append last 2 bytes of mac minus 1 to virtual serial port location ie. /dev/vcom8A10
 
 # windows software available at www.pusr.com
 # usr-vcom = virtual serial port software
@@ -23,10 +26,17 @@
 # !! This script will output the psuedo mac as the devices label as well as the virtual port suffix to match
 # !! the labeling on the device.
 
-# usr-w610 device setup steps
+# usr-w610 device setup step
 #  --Load default settings
 #  --Change from AP to STA, and connect to my home network
 #  --Reboot usr-w610
+
+# check if root if so there is no need for "sudo" command but if not check to make sure it is available
+SUDO=""
+if [ "$(id -u)" -ne 0 ]; then
+	if ! command -v sudo &> /dev/null; then echo "missing sudo, only an admin can run scans."; exit 1; fi
+	SUDO="sudo"
+fi
 
 # check for required programs
 if ! command -v arping &> /dev/null; then echo "missing arping"; exit 1; fi
@@ -38,14 +48,14 @@ network=$(ip r | grep "default" | awk -F'dev ' '{print $2}' | awk '{print $1}')
 
 # find devices
 defaultip=10.10.100.254
-replies=$(sudo arping -w2 -I $network $defaultip | grep "reply" | awk -F']' '{print $1}' | awk -F'[' '{print $2}' | sort -u)
+replies=$($SUDO arping -w2 -I $network $defaultip | grep "reply" | awk -F']' '{print $1}' | awk -F'[' '{print $2}' | sort -u)
 
 # exit if none found
 if [ -z "$replies" ] ; then echo "none found :("; exit 1; fi
 
-# find ips for each mac address
+# find ip for each mac address
 grepexpr=$(echo $replies | sed 's/ /\\|/g')
-devices=$(sudo arp-scan -ql | grep -i $grepexpr | sed 's/\t/-/g')
+devices=$($SUDO arp-scan -ql | grep -i $grepexpr | sed 's/\t/-/g')
 
 for dev in $devices
 do
@@ -62,14 +72,15 @@ do
   separator=":"
   bssidlow=$(echo "$bssidstr" | sed "s/../&${separator}/g" | sed 's/'"$separator"'$//')
   
-  bssid="${bssidlow^^}"
+  bssid=$(echo "${bssidlow^^}")
   macid="${macsuffix^^}"
   
   # find port on a given ip that has the "ospf-lite" service and is open
-  port=$(sudo nmap -sS --open $ip | grep "ospf-lite" | awk -F'/' '{print $1}')
+  port=$($SUDO nmap -sS --open $ip | grep "ospf-lite" | awk -F'/' '{print $1}')
   
   # macid and ip:port
   echo -e "$bssid\\t$ip:$port"
+  
   # socat command for virtual serial port connection
   echo "socat pty,link=$HOME/vcom$macid,waitslave,group-late=dialout,mode=660 tcp:$ip:$port &"
 done
