@@ -10,8 +10,6 @@
 # "sudo apt install iputils-arping arp-scan nmap" on ubuntu
 
 # support for multiple devices on network
-# todo: copy minus 1 nomenclature for displaying mac to user
-# todo: append last 2 bytes of mac minus 1 to virtual serial port location ie. /dev/vcom8A10
 
 # windows software available at www.pusr.com
 # usr-vcom = virtual serial port software
