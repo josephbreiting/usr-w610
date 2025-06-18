@@ -17,6 +17,6 @@ Script will find any usr-w610s on the network and list them with the socat comma
 ## Testing
 
 Tested on two physical usr-w610 devices using Ubuntu 24.04.2 LTS.
-Requires arping, arp-scan, and nmap.
+Requires arping, arp-scan, and nmap. Admin/sudo rights required for scan.
 
     sudo apt install iputils-arping arp-scan nmap
