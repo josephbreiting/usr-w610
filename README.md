@@ -23,4 +23,4 @@ Requires arping, arp-scan, and nmap. Admin/sudo rights required for scan.
 
 ## Issues
 
-Need to add support for server/client detection, only detects tcp servers propperly.  Should only provide socat command for server only.
+Need to add support for server/client detection, only detects tcp servers properly.  Should only provide socat command for server only.
